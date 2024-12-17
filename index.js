@@ -1,14 +1,17 @@
 const TelegramBot = require('node-telegram-bot-api')
 const express = require('express')
 const cors = require('cors')
+const dotenv = require('dotenv')
 
-const token = '7793922238:AAGxwI4VfWnDkfVO_uRwjlzxsuHw22rL1xA'
-
-const bot = new TelegramBot(token, { polling: true })
 const app = express()
 
+dotenv.config()
 app.use(express.json())
 app.use(cors())
+
+const token = process.env.TELEGRAM
+
+const bot = new TelegramBot(token, { polling: true })
 
 const bootstrap = () => {
   bot.setMyCommands([
@@ -84,6 +87,7 @@ bootstrap()
 
 app.post('/web-data', async (req, res) => {
   const { queryId, products } = req.body
+  console.log(req.body)
 
   try {
     await bot.answerWebAppQuery(queryId, {
@@ -108,4 +112,4 @@ app.post('/web-data', async (req, res) => {
   }
 })
 
-app.listen(process.env.PORT || 5000, () => console.log('Server started'))
+app.listen(process.env.PORT || 5001, () => console.log('Server started'))
